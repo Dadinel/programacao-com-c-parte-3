@@ -3,6 +3,10 @@
 #include <string.h>
 #include "mapa.h"
 
+int podeandar(MAPA* m, char personagem, int x, int y) {
+    return ehvalida(m, x, y) && !ehparede(m, x, y) && !ehpersonagem(m, personagem, x, y);
+}
+
 void copiamapa(MAPA* destino, MAPA* origem) {
     destino->linhas = origem->linhas;
     destino->colunas = origem->colunas;
@@ -38,16 +42,26 @@ int ehvazia(MAPA* m, int x, int y) {
     return m->matriz[x][y] == VAZIO;
 }
 
-void encontramapa(MAPA* m, POSICAO* p, char c) {
+int ehparede(MAPA* m, int x, int y) {
+    return m->matriz[x][y] == PAREDE_VERTICAL || m->matriz[x][y] == PAREDE_HORIZONTAL;
+}
+
+int ehpersonagem(MAPA* m, char personagem, int x, int y) {
+    return m->matriz[x][y] == personagem;
+}
+
+int encontramapa(MAPA* m, POSICAO* p, char c) {
     for(int i = 0; i < m->linhas; i++) {
         for(int j = 0; j < m->colunas; j++) {
             if(m->matriz[i][j] == c) {
                 p->x = i;
                 p->y = j;
-                break;
+                return 1;
             }
         }
     }
+
+    return 0;
 }
 
 void liberamapa(MAPA* m) {
